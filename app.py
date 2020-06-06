@@ -162,7 +162,7 @@ def welcome():
 
     if form.validate_on_submit():
         budget, category = form.budget, form.category
-        return redirect(url_for('home'))
+        return render_template('welcome.html', form=form, result=Product.query.filter_by(category=category.data.id).all())
 
     return render_template('welcome.html', form=form)
 
@@ -297,7 +297,7 @@ def add_item():
         f= form.image.data
         filename= secure_filename(f.filename)
         file_url= os.path.join(
-            os.path.dirname(__file__), 'database/images', filename
+            'database/images', filename
         )
         f.save(file_url)
 #id= db.Column(db.Integer, primary_key=True)
