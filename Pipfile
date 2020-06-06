@@ -1,0 +1,21 @@
+[[source]]
+name = "Hackathon_HNE"
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+itsdangerous = "*"
+flask_bootstrap = "*"
+flask_wtf = "*"
+flask_mail = "*"
+email_validator = "*"
+wtforms = "*"
+flask_sqlalchemy = "*"
+flask_login = "*"
+stripe = "*"
+
+[requires]
+python_version = "3.8"
