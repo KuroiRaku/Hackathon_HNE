@@ -72,7 +72,7 @@ class Product(db.Model):
     category= db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
 class Category(db.Model):
-    __bind_key__ = 'category'
+    __bind_key__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
 
@@ -139,7 +139,7 @@ class ResetPasswordForm(FlaskForm):
 
 class WelcomeForm(FlaskForm):
     budget = DecimalField()
-    category = QuerySelectField(query_factory=lambda: User.query)
+    category = QuerySelectField(query_factory=lambda: Category.query.all(), get_label='name')
 
 @LoginManager.user_loader
 def LoadUser(UserId):
