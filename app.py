@@ -1,6 +1,6 @@
 import os
 from os import path
-from flask import Flask, render_template, url_for, request, flash, current_app, redirect, session
+from flask import Flask, render_template, url_for, request, flash, current_app, redirect, session, send_from_directory
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
@@ -166,6 +166,11 @@ def welcome():
 
     return render_template('welcome.html', form=form)
 
+@app.route('/image/<path:filename>')
+@login_required
+def access_image(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
@@ -297,19 +302,12 @@ def add_item():
         f= form.image.data
         filename= secure_filename(f.filename)
         file_url= os.path.join(
-            'database/images', filename
+            'database/images',
+            filename
         )
         f.save(file_url)
-#id= db.Column(db.Integer, primary_key=True)
-#name=db.Column(db.String(30))
-#utility= db.Column(db.Integer)
-#marginal_utility= db.Column(db.Integer)
-#description= db.Column(db.String(40))
-#price=db.Column(db.Integer)
-#category= db.Column(db.String(30))
-#image_url= db.Column(db.String(50))
         new_product = Product(name=form.name.data, utility=form.utility.data, marginal_utility=form.marginal_utility.data, description= form.description.data,
-        price = form.price.data, category=form.category.data.id,image_url=file_url)
+        price = form.price.data, category=form.category.data.id,image_url=filename)
         #price = form.price.data, category=form.category.data,image=form.files['image'])
 
         db.session.add(new_product)
