@@ -5,7 +5,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
 from flask_mail import Message, Mail
-from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField, FileField
+from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField, FileField, DecimalField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, Email, DataRequired, Length, EqualTo
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -77,6 +78,10 @@ class Product(db.Model):
     image_url= db.Column(db.String(30))
     #image = db.Column(db.LargeBinary)
 
+class Category(db.Model):
+    __bind_key__ = 'product'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
 
 class ProductForm(FlaskForm):
     name= TextField("Product name", validators=[InputRequired()])
@@ -143,14 +148,24 @@ class ResetPasswordForm(FlaskForm):
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
 
+class WelcomeForm(FlaskForm):
+    budget = DecimalField('Budget', validators=[DataRequired()])
+    category = QuerySelectField('Category', query_factory=lambda: Category.query.all(), get_label='name')
 
 @LoginManager.user_loader
 def LoadUser(UserId):
     return User.query.get(int(UserId))
 
-@app.route('/')
-def Welcome():
-    return redirect('/home')
+@app.route('/', methods=['GET', 'POST'])
+@login_required
+def welcome():
+    form = WelcomeForm()
+
+    if form.validate_on_submit():
+        budget, category = form.budget, form.category
+        return redirect(url_for('home'))
+
+    return render_template('welcome.html', form=form)
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -211,14 +226,14 @@ If you did not make this request then simply ignore this email and no changes wi
     Mail.send(msg)
 
 @app.route('/test')
+@login_required
 def test():
     return render_template('layout.html')
 
 
 @app.route("/password", methods=['GET', 'POST'])
+@login_required
 def password():
-    if current_user.is_authenticated:
-        return redirect(url_for('Home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -282,10 +297,10 @@ def add_item():
     if form.validate_on_submit():
         f= form.image.data
         filename= secure_filename(f.filename)
-        f.save(os.path.join(
+        file_url= os.path.join(
             os.path.dirname(__file__), 'database/images', filename
-        ))
-        file_url= 'database/images/'+filename
+        )
+        f.save(file_url)
         new_product = Product(name=form.name.data, utility=form.utility.data, marginal_utility=form.marginal_utility.data, description= form.description.data,
         price = form.price.data, category=form.category.data,image_url=file_url)
         #price = form.price.data, category=form.category.data,image=form.files['image'])
