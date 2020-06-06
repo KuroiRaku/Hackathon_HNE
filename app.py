@@ -21,7 +21,6 @@ stripe_keys = {
 stripe.api_key = stripe_keys['secret_key']
 
 Mail=Mail()
-Moment= Moment()
 LoginManager = LoginManager()
 
 app = Flask(__name__)
