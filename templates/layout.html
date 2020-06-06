@@ -1,20 +1,19 @@
-{% extends "bootstrap/base.html" %}
-{{super()}}
+<html>
 
-<html lang="en">
-<head>
+
+{% block head %}
     {% block title %}
     <title>Home</title>
     {% endblock %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block style %}
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='css/main.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='vendor/bootstrap/css/bootstrap.min.css')}}">
     {% endblock %}
-</head>
-<body class="animsition">
+{% endblock %}
+<body>
     {% block header %}
-    {{super()}}
 
     <!-- Header -->
     <header class="header1">
@@ -90,14 +89,23 @@
     </header>
     {% endblock %}
 
-    {% block content %}{% endblock %}
+    {% block upper_content %}
+
+    {% endblock %}
+
+
+    {% block content %}
+      <div class ="image">
+        <img src="{{url_for('static',filename='images/first_page.jpg')}}" alt="IMG-BANNER">
+      </div>
+    {% endblock %}
 
     {% block footer %}
-    <script type="text/javascript" src="{{url_for('.static', filename='vendor/bootstrap/js/popper.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('.static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('.static', filename='vendor/jquery/jquery-3.2.1.min.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('.static', filename='vendor/bootstrap/js/popper.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('.static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
     {% endblock %}
 
 
 </body>
 </html>
-

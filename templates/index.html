@@ -1,11 +1,26 @@
 {% extends "layout.html" %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}
     <title>Document</title>
-</head>
-<body>
-    
+{% endblock %}
+
+
+<body style="background-image: url({{ url_for('static', filename='images/first_page.jpg') }});">
+{% block content %}
+<img src={{url_for('static',filename='images/first_page.jpg')}}>
+<h4 class = "music"> My top picks for music of all times for different genres</h4>
+				<ol class="Musicstyle">
+					<li>Heavy Metal</li>
+					<ul>
+						<li>Desperate by nocturnal Bloodlust</li>
+						<li>Nightmare by Aveneged Sevenfold</li>
+					</ul>
+					<li >Japanese musics</li>
+					<ul>
+						<li><a href="https://youtu.be/VJy8qZ77bpE">眩しいDNAだけ</a> by ずっと真夜中でいいのに</li>
+						<li><a href= "https://youtu.be/loxujxwIb5U"> フリージア</a> by Uru</li>
+					</ul>
+				</ol>
+{% endblock %}
+
 </body>
 </html>

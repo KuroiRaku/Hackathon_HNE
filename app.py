@@ -5,7 +5,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
 from flask_mail import Message, Mail
-from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField
+from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import InputRequired, Email, DataRequired, Length, EqualTo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -34,6 +34,10 @@ app.config['SECRET_KEY']='123456789_ABC'
 db_path = os.path.join(os.path.dirname(__file__), 'users.db')
 db_uri = 'sqlite:///{}'.format(db_path)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+db_path_2 = os.path.join(os.path.dirname(__file__), 'product.db')
+db_uri_2 = 'sqlite:///{}'.format(db_path_2)
+app.config['SQLALCHEMY_BINDS']= {'product': db_uri_2}
+                        #{'songs':'sqlite:///...\\MusicDatabse.db'}
 app.config['CSRF_ENABLED']= True
 
 #no money to buy server...
@@ -55,7 +59,24 @@ LoginManager.session_protection = 'strong'
 LoginManager.login_view = 'login'
 LoginManager.login_message='You need to login!'
 
-#oh my, all the class are in camel case XD 
+#oh my, all the class are in camel case XD
+class Product(db.Model):
+    __bind_key__ = 'product'
+    id= db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(30))
+    utility= db.Column(db.Integer)
+    marginal_utility= db.Column(db.Integer)
+    website= db.Column(db.String(40))
+    price=db.Column(db.Integer)
+    category= db.Column(db.String(40))
+
+
+class ProductForm(FlaskForm):
+    name= TextField("FirstName", validators=[InputRequired("Please")])
+    utility = IntegerField("utility", validators=[DataRequired()])
+    Email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    Message = TextAreaField("Message")
+    Submit = SubmitField("Submit")
 
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Length(min=4, max=50)])
@@ -129,7 +150,6 @@ def is_safe_url(target):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
@@ -219,7 +239,7 @@ def reset_token(token):
 def home():
     return render_template('index.html')
 
-@app.route('/about_us') 
+@app.route('/about_us')
 def about_us():
     return render_template('about.html')
 
@@ -244,7 +264,10 @@ def contact():
     elif request.method == 'GET':
         return render_template('contact.html',form=form)
 
+@app.route('/add_item')
+def add_item():
 
+    return render_template('add_product.html')
 
 if __name__=="__main__":
     db.create_all()
