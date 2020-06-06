@@ -37,7 +37,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['CSRF_ENABLED']= True
 
 #no money to buy server...
-app.config['SERVER_NAME']='localhost:5000'
+app.config['SERVER_NAME']='127.0.0.1:5000'
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USE_SSL"] = True
@@ -118,7 +118,7 @@ def LoadUser(UserId):
 
 @app.route('/')
 def Welcome():
-    return redirect('/Home')
+    return redirect('/home')
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)

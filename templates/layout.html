@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+{% extends "bootstrap/base.html" %}
+{{super()}}
+
 <html lang="en">
 <head>
     {% block title %}
@@ -7,10 +9,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block style %}
-    
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='vendor/bootstrap/css/bootstrap.min.css')}}">
     {% endblock %}
 </head>
 <body class="animsition">
+    {% block header %}
+    {{super()}}
 
     <!-- Header -->
     <header class="header1">
@@ -77,21 +81,23 @@
                         <img src="{{url_for('.static', filename='images/icons/icon-header-02.png')}}" class="header-icon1 js-show-header-dropdown" alt="ICON">
                         <span class="header-icons-noti">0</span>
 
-                        
-                        
+
+
                     </div>
                 </div>
             </div>
         </div>
-        </header>
-    
+    </header>
+    {% endblock %}
+
     {% block content %}{% endblock %}
 
+    {% block footer %}
+    <script type="text/javascript" src="{{url_for('.static', filename='vendor/bootstrap/js/popper.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('.static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+    {% endblock %}
 
 
-    
-    </body>
+</body>
 </html>
-<!-- ohhh you don't know about the jinja inheritence? XD lemme modify this real quick-->
-<!-- so index is the landing page and lay out is? ->? -->
-<!-- is this also from your e-commerce w  yessssss--> 
+
