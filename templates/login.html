@@ -2,7 +2,7 @@
 {% block content %}
 <form method=post>
   <dl>
-    {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}
         {{ wtf.form_field(form.email) }}
         {{ wtf.form_field(form.password) }}
         {{ wtf.form_field(form.remember) }}

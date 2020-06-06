@@ -5,13 +5,16 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
 from flask_mail import Message, Mail
-from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField
+from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField, FileField
 from wtforms.validators import InputRequired, Email, DataRequired, Length, EqualTo
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, fresh_login_required, logout_user, current_user
 from datetime import datetime
 import stripe
+import email_validator
 
 stripe_keys = {
   'secret_key': 'pk_test_87AxnNnWKK2upOoR1OynsXVw00ZhJONDsj',
@@ -28,20 +31,20 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db=SQLAlchemy(app)
 bootstrap = Bootstrap(app)
 
+upload_folder='database/images'
 
-app.config.from_object(__name__)
 app.config['SECRET_KEY']='123456789_ABC'
+app.config['UPLOAD_FOLDER'] = upload_folder
+app.config.from_object(__name__)
 db_path = os.path.join(os.path.dirname(__file__), 'database/users.db')
 db_uri = 'sqlite:///{}'.format(db_path)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 db_path_2 = os.path.join(os.path.dirname(__file__), 'database/product.db')
 db_uri_2 = 'sqlite:///{}'.format(db_path_2)
 app.config['SQLALCHEMY_BINDS']= {'product': db_uri_2}
-                        #{'songs':'sqlite:///...\\MusicDatabse.db'}
 app.config['CSRF_ENABLED']= True
-
-#no money to buy server...
 app.config['SERVER_NAME']='localhost:5000'
+
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USE_SSL"] = True
@@ -55,6 +58,8 @@ LoginManager.init_app(app)
 db.create_all()
 
 
+
+
 LoginManager.session_protection = 'strong'
 LoginManager.login_view = 'login'
 LoginManager.login_message='You need to login!'
@@ -66,17 +71,23 @@ class Product(db.Model):
     name=db.Column(db.String(30))
     utility= db.Column(db.Integer)
     marginal_utility= db.Column(db.Integer)
-    website= db.Column(db.String(40))
+    description= db.Column(db.String(40))
     price=db.Column(db.Integer)
-    category= db.Column(db.String(40))
+    category= db.Column(db.String(30))
+    image_url= db.Column(db.String(30))
+    #image = db.Column(db.LargeBinary)
 
 
 class ProductForm(FlaskForm):
     name= TextField("Product name", validators=[InputRequired()])
     utility = IntegerField("utility", validators=[DataRequired()])
-    price = StringField('email', validators=[InputRequired()])
-    Message = TextAreaField("Message")
-    Submit = SubmitField("Submit")
+    marginal_utility= SelectField("Satisfaction if you get the same product", validators=[DataRequired()], choices=[('3', 'High'), ('2','Average'),
+     ('1', 'low')])
+    description = StringField('Description', validators=[DataRequired()])
+    price = IntegerField('Price', validators=[DataRequired()])
+    category = SelectField("Category of the product", validators=[DataRequired()], choices=[('Fruits', 'Fruits'), ('Acessory','Acessory'),
+     ('Others', 'Others')])
+    image = FileField('Image', validators=[FileRequired()])
 
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Length(min=4, max=50)])
@@ -265,10 +276,28 @@ def contact():
     elif request.method == 'GET':
         return render_template('contact.html',form=form)
 
-@app.route('/add_item')
+@app.route('/add_item', methods=['GET','POST'])
 def add_item():
+    form= ProductForm()
+    if form.validate_on_submit():
+        f= form.image.data
+        filename= secure_filename(f.filename)
+        f.save(os.path.join(
+            os.path.dirname(__file__), 'database/images', filename
+        ))
+        file_url= 'database/images/'+filename
+        new_product = Product(name=form.name.data, utility=form.utility.data, marginal_utility=form.marginal_utility.data, description= form.description.data,
+        price = form.price.data, category=form.category.data,image_url=file_url)
+        #price = form.price.data, category=form.category.data,image=form.files['image'])
 
-    return render_template('add_product.html')
+        db.session.add(new_product)
+        db.session.commit()
+        return "Success!"
+        #return redirect(url_for('home'))
+        #return ("Success!"+ {file_url})
+        #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
+
+    return render_template('add_item.html', form=form)
 
 if __name__=="__main__":
     db.create_all()

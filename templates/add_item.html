@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+<div class="container">
+  <form method="POST">
+    <h2> Add Item </h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.name) }}
+    {{ wtf.form_field(form.utility) }}
+    {{ wtf.form_field(form.marginal_utility) }}
+    {{ wtf.form_field(form.description) }}
+    {{ wtf.form_field(form.price) }}
+    {{ wtf.form_field(form.category) }}
+    {{ wtf.form_field(form.image) }}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Item!</button>
+  </form>
+</div>
+{% endblock %}
