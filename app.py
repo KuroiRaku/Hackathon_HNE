@@ -5,7 +5,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
 from flask_mail import Message, Mail
-from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField
+from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField, DecimalField
 from wtforms.validators import InputRequired, Email, DataRequired, Length, EqualTo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -132,14 +132,23 @@ class ResetPasswordForm(FlaskForm):
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
 
+class WelcomeForm(FlaskForm):
+    budget = DecimalField()
+    category = SelectField()
 
 @LoginManager.user_loader
 def LoadUser(UserId):
     return User.query.get(int(UserId))
 
 @app.route('/')
-def Welcome():
-    return redirect('/home')
+@login_required
+def welcome():
+    form = WelcomeForm()
+
+    if form.validate_on_submit():
+        return redirect('/home')
+    
+    return render_template('welcome.html', form=form)
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -200,14 +209,14 @@ If you did not make this request then simply ignore this email and no changes wi
     Mail.send(msg)
 
 @app.route('/test')
+@login_required
 def test():
     return render_template('layout.html')
 
 
 @app.route("/password", methods=['GET', 'POST'])
+@login_required
 def password():
-    if current_user.is_authenticated:
-        return redirect(url_for('Home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -266,6 +275,7 @@ def contact():
         return render_template('contact.html',form=form)
 
 @app.route('/add_item')
+@login_required
 def add_item():
 
     return render_template('add_product.html')
