@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 
+{% block content %}
 <div class="container">
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     <h2> Add Item </h2>
     {{ form.hidden_tag() }}
     {{ wtf.form_field(form.name) }}

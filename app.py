@@ -72,10 +72,10 @@ class Product(db.Model):
     name=db.Column(db.String(30))
     utility= db.Column(db.Integer)
     marginal_utility= db.Column(db.Integer)
-    description= db.Column(db.String(40))
+    description= db.Column(db.String(60))
     price=db.Column(db.Integer)
     category= db.Column(db.String(30))
-    image_url= db.Column(db.String(30))
+    image_url= db.Column(db.String(50))
     #image = db.Column(db.LargeBinary)
 
 class Category(db.Model):
@@ -92,7 +92,7 @@ class ProductForm(FlaskForm):
     price = IntegerField('Price', validators=[DataRequired()])
     category = SelectField("Category of the product", validators=[DataRequired()], choices=[('Fruits', 'Fruits'), ('Acessory','Acessory'),
      ('Others', 'Others')])
-    image = FileField('Image', validators=[FileRequired()])
+    image = FileField('Image', validators=[FileRequired("PLEASE")])
 
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Length(min=4, max=50)])
@@ -301,6 +301,14 @@ def add_item():
             os.path.dirname(__file__), 'database/images', filename
         )
         f.save(file_url)
+#id= db.Column(db.Integer, primary_key=True)
+#name=db.Column(db.String(30))
+#utility= db.Column(db.Integer)
+#marginal_utility= db.Column(db.Integer)
+#description= db.Column(db.String(40))
+#price=db.Column(db.Integer)
+#category= db.Column(db.String(30))
+#image_url= db.Column(db.String(50))
         new_product = Product(name=form.name.data, utility=form.utility.data, marginal_utility=form.marginal_utility.data, description= form.description.data,
         price = form.price.data, category=form.category.data,image_url=file_url)
         #price = form.price.data, category=form.category.data,image=form.files['image'])
