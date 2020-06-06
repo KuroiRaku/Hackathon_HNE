@@ -41,7 +41,7 @@ app.config['SQLALCHEMY_BINDS']= {'product': db_uri_2}
 app.config['CSRF_ENABLED']= True
 
 #no money to buy server...
-app.config['SERVER_NAME']='127.0.0.1:5000'
+app.config['SERVER_NAME']='localhost:5000'
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USE_SSL"] = True
@@ -157,10 +157,11 @@ def login():
                 login_user(user, remember=form.remember.data)
                 session['username'] = user.username
                 session['email']= user.email
-                return redirect(url_for('Home'))
+                return redirect(url_for('home'))
 
         return '<h1>Invalid email or password</h1>'
         #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+    print(form.errors)
     return render_template('login.html', form=form)
 
 @app.route('/logout')
