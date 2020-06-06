@@ -300,6 +300,7 @@ def add_item():
         file_url= os.path.join(
             os.path.dirname(__file__), 'database/images', filename
         )
+        image_url='database/images/'+ filename
         f.save(file_url)
 #id= db.Column(db.Integer, primary_key=True)
 #name=db.Column(db.String(30))
@@ -309,8 +310,8 @@ def add_item():
 #price=db.Column(db.Integer)
 #category= db.Column(db.String(30))
 #image_url= db.Column(db.String(50))
-        new_product = Product(name=form.name.data, utility=form.utility.data, marginal_utility=form.marginal_utility.data, description= form.description.data,
-        price = form.price.data, category=form.category.data,image_url=file_url)
+        new_product = Product(name=form.name.data, utility=form.utility.data, marginal_utility=int(form.marginal_utility.data), description= form.description.data,
+        price = form.price.data, category=form.category.data,image_url=image_url)
         #price = form.price.data, category=form.category.data,image=form.files['image'])
 
         db.session.add(new_product)
