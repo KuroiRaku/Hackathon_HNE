@@ -31,10 +31,10 @@ bootstrap = Bootstrap(app)
 
 app.config.from_object(__name__)
 app.config['SECRET_KEY']='123456789_ABC'
-db_path = os.path.join(os.path.dirname(__file__), 'users.db')
+db_path = os.path.join(os.path.dirname(__file__), 'database/users.db')
 db_uri = 'sqlite:///{}'.format(db_path)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-db_path_2 = os.path.join(os.path.dirname(__file__), 'product.db')
+db_path_2 = os.path.join(os.path.dirname(__file__), 'database/product.db')
 db_uri_2 = 'sqlite:///{}'.format(db_path_2)
 app.config['SQLALCHEMY_BINDS']= {'product': db_uri_2}
                         #{'songs':'sqlite:///...\\MusicDatabse.db'}
@@ -72,9 +72,9 @@ class Product(db.Model):
 
 
 class ProductForm(FlaskForm):
-    name= TextField("FirstName", validators=[InputRequired("Please")])
+    name= TextField("Product name", validators=[InputRequired()])
     utility = IntegerField("utility", validators=[DataRequired()])
-    Email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    price = StringField('email', validators=[InputRequired()])
     Message = TextAreaField("Message")
     Submit = SubmitField("Submit")
 
