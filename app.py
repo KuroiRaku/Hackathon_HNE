@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
 from flask_mail import Message, Mail
 from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField, IntegerField, DecimalField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, Email, DataRequired, Length, EqualTo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -68,8 +69,12 @@ class Product(db.Model):
     marginal_utility= db.Column(db.Integer)
     website= db.Column(db.String(40))
     price=db.Column(db.Integer)
-    category= db.Column(db.String(40))
+    category= db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
+class Category(db.Model):
+    __bind_key__ = 'category'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
 
 class ProductForm(FlaskForm):
     name= TextField("Product name", validators=[InputRequired()])
@@ -134,7 +139,7 @@ class ResetPasswordForm(FlaskForm):
 
 class WelcomeForm(FlaskForm):
     budget = DecimalField()
-    category = SelectField()
+    category = QuerySelectField(query_factory=lambda: User.query)
 
 @LoginManager.user_loader
 def LoadUser(UserId):
@@ -146,6 +151,7 @@ def welcome():
     form = WelcomeForm()
 
     if form.validate_on_submit():
+        db.session
         return redirect('/home')
     
     return render_template('welcome.html', form=form)
