@@ -138,21 +138,21 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Reset Password')
 
 class WelcomeForm(FlaskForm):
-    budget = DecimalField()
-    category = QuerySelectField(query_factory=lambda: Category.query.all(), get_label='name')
+    budget = DecimalField('Budget', validators=[DataRequired()])
+    category = QuerySelectField('Category', query_factory=lambda: Category.query.all(), get_label='name')
 
 @LoginManager.user_loader
 def LoadUser(UserId):
     return User.query.get(int(UserId))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @login_required
 def welcome():
     form = WelcomeForm()
 
     if form.validate_on_submit():
-        db.session
-        return redirect('/home')
+        budget, category = form.budget, form.category
+        return redirect(url_for('home'))
     
     return render_template('welcome.html', form=form)
 
