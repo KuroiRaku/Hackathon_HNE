@@ -6,9 +6,20 @@
 <body style="background-image: url({{ url_for('static', filename='images/first_page.jpg') }});">
 {% block content %}
 <style type="text/css">
-    .item_grid-image {
+    #items_grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #items_grid .image {
         width: 200px;
         height: 200px;
+    }
+
+    #items_grid .description {
+        width: 350px;
+        max-width: 350px;
+        word-wrap: break-word;
     }
 </style>
 
@@ -26,30 +37,26 @@
     {% if result|length == 0 %}
         No items in category "{{ form.category.data.name }}".
     {% else %}
+    <div id="items_grid">
+        {% for x in result %}
         <table>
         <tbody>
-            {% for x in result %}
             <tr>
-                <table>
-                <tbody>
-                    <tr>
-                        <td class="item_grid-image"><img src ="{{ x['image_url'] }}"></td>
-                        <td>
-                            <table>
-                            <tbody>
-                                <tr><td>Product name: {{ x['name'] }}</td><td>Price: {{ x['price'] }}</td></tr>
-                                <tr><td>Utility: {{ x['utility'] }}</td><td>Marginal utility: {{ x['marginal_utility'] }}</td></tr>
-                                <tr><td>Description:<br/>{{ x['description'] }}</td></tr>
-                            </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-                </table>
+                <td class="image"><img src ="{{ x['image_url'] }}"></td>
+                <td class="details">
+                    <table>
+                    <tbody>
+                        <tr><td>Product name: {{ x['name'] }}</td><td>Price: {{ x['price'] }}</td></tr>
+                        <tr><td>Utility: {{ x['utility'] }}</td><td>Marginal utility: {{ x['marginal_utility'] }}</td></tr>
+                        <tr><td class="description">Description:<br/>{{ x['description'] }}</td></tr>
+                    </tbody>
+                    </table>
+                </td>
             </tr>
-            {% endfor %}
         </tbody>
         </table>
+        {% endfor %}
+    </div>
     {% endif %}
     </p>
 {% endif %}
