@@ -5,11 +5,9 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, FlaskForm
 from flask_mail import Message, Mail
-from flask_moment import Moment
 from wtforms import TextField, TextAreaField, SubmitField, SelectField, ValidationError, StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, DataRequired, Length, EqualTo
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, fresh_login_required, logout_user, current_user
 from datetime import datetime
@@ -58,7 +56,7 @@ LoginManager.session_protection = 'strong'
 LoginManager.login_view = 'login'
 LoginManager.login_message='You need to login!'
 
-
+#oh my, all the class are in camel case XD 
 
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Length(min=4, max=50)])
@@ -222,7 +220,7 @@ def reset_token(token):
 def home():
     return render_template('index.html')
 
-@app.route('/about_us')
+@app.route('/about_us') 
 def about_us():
     return render_template('about.html')
 
