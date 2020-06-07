@@ -82,13 +82,15 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
 
-class ProductForm(FlaskForm):
+class ProductEditForm(FlaskForm):
     name= TextField("Product name", validators=[InputRequired()])
     utility = IntegerField("utility", validators=[DataRequired()])
     marginal_utility= SelectField("Satisfaction if you get the same product", validators=[DataRequired()], choices=[('3', 'High'), ('2','Average'),
      ('1', 'low')])
     description = StringField('Description', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
+
+class ProductForm(ProductEditForm):
     category = QuerySelectField("Category of the product", query_factory=lambda: Category.query.all(), get_label='name')
     image = FileField('Image', validators=[FileRequired("PLEASE")])
 
@@ -330,14 +332,34 @@ def home():
     return redirect(url_for('welcome'))
 
 @app.route('/product')
-def product():
+def products():
     global budget_entered
     if budget_entered:
         products = Product.query.all()
+        for p in products: print(p.id)
         return render_template('products.html', products = products)
 
     return redirect(url_for('welcome'))
 
+@app.route('/product/<path:id>', methods=['GET', 'POST'])
+def product(id):
+    global budget_entered
+    product = Product.query.filter_by(id=id).first()
+
+    if budget_entered:
+        form = ProductForm()
+        form.name.data = product.name
+        form.utility.data = product.utility
+        form.marginal_utility.data = product.marginal_utility
+        form.description.data = product.description
+        form.price.data = product.price
+        if form.validate_on_submit():
+            pass
+
+        product.image_url = os.path.join("../../image", product.image_url)
+        return render_template('products.html', products=product, form=form)
+
+    return redirect(url_for('welcome'))
 
 @app.route('/about_us')
 def about_us():
@@ -386,7 +408,7 @@ def add_item():
         #return redirect(url_for('home'))
         #return ("Success!"+ {file_url})
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
-
+    
     return render_template('add_item.html', form=form)
 
 if __name__=="__main__":
