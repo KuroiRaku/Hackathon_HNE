@@ -44,7 +44,6 @@ db_path_2 = os.path.join(os.path.dirname(__file__), 'database/product.db')
 db_uri_2 = 'sqlite:///{}'.format(db_path_2)
 app.config['SQLALCHEMY_BINDS']= {'product': db_uri_2}
 app.config['CSRF_ENABLED']= True
-app.config['SERVER_NAME']='localhost:5000'
 
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 465
