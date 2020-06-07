@@ -1,5 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>About This Project</title>
+{% endblock %}
+
+{% block content %}
   <style>
   body {
     background-image: url('about.png');
@@ -17,10 +22,10 @@
 
   </head>
   <body>
-    <p style="text-align:center;padding:200px; font-family:serif; font-size:50px;font-style: bold"> 
+    <p style="text-align:center;padding:200px; font-family:serif; font-size:50px;font-style: bold">
       UTIL: Squeezing the most out of every dollar! Our goal is to make customers
       satisfied with the items they buy regardless their limited budget.
     </p>
 
   </body>
-</html>
+{% endblock %}
