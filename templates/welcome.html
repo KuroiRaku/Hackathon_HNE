@@ -2,12 +2,15 @@
 {% block title %}
     <title>Welcome</title>
 {% endblock %}
+
+
+
 {% block content %}
 
 
 
 
-<div class = "container">
+<div class="container">
   <form method=post>
       <dl>
           {{ form.hidden_tag() }}
@@ -18,12 +21,18 @@
   </form>
 </div>
 
+<div class="container">
 {% if result != Null %}
-<p>
     {% if result|length == 0 %}
         No items in category "{{ form.category.data.name }}".
     {% else %}
-    <div class="items_grid container">
+
+      <pre>
+      {% for i in output %}
+       {{i}}
+      {% endfor %}
+      </pre>
+      <br>
         {% for x in result %}
         <table>
         <tbody>
@@ -52,11 +61,11 @@
         </tbody>
         </table>
         {% endfor %}
-    </div>
+
     {% endif %}
 
 {% endif %}
-
+</div>
 
 
 {% endblock %}

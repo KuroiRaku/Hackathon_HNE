@@ -161,11 +161,66 @@ def welcome():
 
     if form.validate_on_submit():
         budget_entered= True
-        budget, category = form.budget, form.category
+        budget = float(form.budget.data)
+        category = form.category
         session['budget'] = form.budget
         session['category'] = form.category
+        products_in_category = Product.query.filter_by(category=category.data.id).all()
 
-        return render_template('welcome.html', form=form, result=Product.query.filter_by(category=category.data.id).all())
+        product_name=[]
+        utility=[]
+        price=[]
+        utility_per_price=[]
+        final_product=[]
+        total_utility=0;
+        total_cost=0;
+
+        for product in products_in_category:
+            print(product.name , flush=True)
+            product_name.append(product.name)
+            utility.append(product.utility)
+            utility_per_price= product.utility/product.price
+            final_product.append([product.name, utility_per_price,product.price,0])
+
+        highest_utility_per_price=0;
+        best_class=[]
+        total_utility=0
+        output=[]
+        output.append("You should buy")
+        while budget > 0.0:
+            for x in final_product:
+                print(x, flush=True)
+                if x[1] > highest_utility_per_price:
+                    highest_utility_per_price= x[1]
+                    best_class=x
+            #when finish looping
+            if best_class[1]==0:
+                break
+            budget -= best_class[2]
+            total_utility += best_class[1]
+            for x in final_product:
+                if best_class == x:
+                    x[1] -= 0.5
+                    x[3] += 1
+                    break
+
+            print("best_class: ", flush=True)
+            print(best_class, flush=True)
+            print("end of", flush=True)
+            highest_utility_per_price = 0
+
+        for x in final_product:
+            print("You should buy", flush=True)
+            print(x[3], flush=True)
+            print(x[0],flush=True)
+            output.append(str(x[3])+ " "+ str(x[0])+"(s)")
+        print("Total Utility is", flush=True)
+        print(total_utility, flush=True)
+        output.append("Total Utility is "+ str(total_utility))
+
+        print(output,flush=True)
+
+        return render_template('welcome.html', form=form, result=Product.query.filter_by(category=category.data.id).all(), utility_per_price=utility_per_price, output=output)
 
     return render_template('welcome.html', form=form)
 
