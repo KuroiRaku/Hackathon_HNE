@@ -2,6 +2,18 @@
 
 {% block content %}
 
-{% include "_item_grid.html" %}
+<div class="container">
+{% if products is iterable and products|length == 0 %}
+    No products found. 
+{% else %}
+    <pre>
+    {% for i in output %}
+        {{i}}
+    {% endfor %}
+    </pre>
+    <br>
+    {% include "_item_grid.html" %}
+{% endif %}
+</div>
 
 {% endblock %}

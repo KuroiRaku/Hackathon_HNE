@@ -63,6 +63,7 @@ LoginManager.login_message='You need to login!'
 
 budget_entered = False
 entered_budget=0
+logged_in=False
 
 #oh my, all the class are in camel case XD
 class Product(db.Model):
@@ -160,8 +161,9 @@ def LoadUser(UserId):
 def welcome():
     global budget_entered
     global entered_budget
+    global logged_in
     form = WelcomeForm()
-
+    login= logged_in
     if form.validate_on_submit():
         budget_entered= True
         budget = float(form.budget.data)
@@ -229,9 +231,9 @@ def welcome():
         print(total_utility, flush=True)
         output.append("Total Maximum Satisfaction you can get is "+ str(round(total_utility,1)))
 
-        return render_template('welcome.html', form=form, products=products_in_category, utility_per_price=utility_per_price, output=output)
+        return render_template('welcome.html', form=form, products=products_in_category, utility_per_price=utility_per_price, output=output,login=login)
 
-    return render_template('welcome.html', form=form)
+    return render_template('welcome.html', form=form,login=login)
 
 @app.route('/image/<path:filename>')
 def access_image(filename):
@@ -246,6 +248,7 @@ def is_safe_url(target):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    global logged_in
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
@@ -253,6 +256,7 @@ def login():
                 login_user(user, remember=form.remember.data)
                 session['username'] = user.username
                 session['email']= user.email
+                logged_in=True
                 return redirect(url_for('welcome'))
 
         return '<h1>Invalid email or password</h1>'
@@ -263,6 +267,8 @@ def login():
 @app.route('/logout')
 @login_required
 def LogOut():
+    global logged_in
+    logged_in=False
     logout_user()
     return redirect ('/login')
 
@@ -277,7 +283,7 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        return render_template('NewUserCreated.html')
+        return render_template('login.html')
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
     return render_template('signup.html', form=form)
