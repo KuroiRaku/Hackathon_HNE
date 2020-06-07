@@ -1,10 +1,15 @@
-{% from "_formhelpers.html" import render_field %}
-<form method=post>
-  <dl>
-    {{ form.csrf_token }}
-    {{ render_field(form.username) }}
-    {{ render_field(form.email) }}
-    {{ render_field(form.password) }}
-  </dl>
-  <p><input type=submit value=Register>
-</form>
+{% extends "layout.html" %}
+{% block content %}
+<div class="containter">
+    <form class="form-signin" method="post">
+        <dl>
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.username) }}
+            {{ wtf.form_field(form.email) }}
+            {{ wtf.form_field(form.password) }}
+            {{ wtf.form_field(form.confirm) }}
+        </dl>
+        <p><input type=submit value=Register></p>
+    </form>
+</div>
+{% endblock %}

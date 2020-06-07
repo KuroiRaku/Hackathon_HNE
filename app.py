@@ -104,6 +104,7 @@ class RegisterForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+    confirm = PasswordField('confirm password', validators=[InputRequired(), Length(min=8, max=80), EqualTo('password', message='Passwords must match')])
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
@@ -194,7 +195,7 @@ def welcome():
         best_class=[]
         total_utility=0
         output=[]
-        output.append("You should buy")
+        output.append("You should buy:")
         while budget > 0.0:
             for x in final_product:
                 if x[1] > highest_utility_per_price:
@@ -219,9 +220,11 @@ def welcome():
 
             highest_utility_per_price = 0
 
-        for x in final_product:
-            output.append(str(x[3])+ " "+ str(x[0])+"(s)")
-        output.append("Total Maximum Satisfaction you can get is "+ str(round(total_utility,1)))
+        for x in final_product[:-1]:
+            output.append("\t" + str(x[3])+ " "+ str(x[0]) + ("," if x[3] == 1 else "s,"))
+        output.append("\t" + str(x[3]) + " " + str(x[0]) + ("." if x[3] == 1 else "s."))
+        output.append("Total Maximum Satisfaction you can get is "+ str(round(total_utility)) + ".")
+        output.append("Total Price: " + str(round(float(form.budget.data) - budget, 2)) + ".")
 
         return render_template('welcome.html', form=form, products=products_in_category, utility_per_price=utility_per_price, output=output,login=login)
 
