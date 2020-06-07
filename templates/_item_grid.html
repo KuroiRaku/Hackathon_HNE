@@ -66,6 +66,10 @@
                 {{ item_cell(product) }}
             </a>
         {% endfor %}
+        <br />
+        <p><a href="add_item">
+            <input type="button" value="Add new product" />
+        </a></p>
     {% else %}
         <form method="post">
             {{ form.hidden_tag() }}
