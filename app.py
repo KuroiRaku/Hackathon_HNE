@@ -188,7 +188,7 @@ def welcome():
             product_name.append(product.name)
             utility.append(product.utility)
             utility_per_price= product.utility/product.price
-            final_product.append([product.name, utility_per_price,product.price,0, product.marginal_utility])
+            final_product.append([product.name, utility_per_price,product.price,0, product.marginal_utility,product.utility, product.price])
 
         highest_utility_per_price=0;
         best_class=[]
@@ -197,7 +197,6 @@ def welcome():
         output.append("You should buy")
         while budget > 0.0:
             for x in final_product:
-                print(x, flush=True)
                 if x[1] > highest_utility_per_price:
                     highest_utility_per_price= x[1]
                     best_class=x
@@ -205,30 +204,23 @@ def welcome():
             if best_class[1]<=0:
                 break
             budget -= best_class[2]
-            total_utility += best_class[1]
+            total_utility += best_class[5]
             for x in final_product:
                 if best_class == x:
                     if x[4]==3:
-                        x[1]-=0.2
+                        x[5]-=1
                     elif x[4]==2:
-                        x[1] -= 0.5
+                        x[5] -= 3
                     else:
-                        x[1]-=0.8
+                        x[5]-=5
+                    x[1]= x[5]/x[6]
                     x[3] += 1
                     break
 
-            print("best_class: ", flush=True)
-            print(best_class, flush=True)
-            print("end of", flush=True)
             highest_utility_per_price = 0
 
         for x in final_product:
-            print("You should buy", flush=True)
-            print(x[3], flush=True)
-            print(x[0],flush=True)
             output.append(str(x[3])+ " "+ str(x[0])+"(s)")
-        print("Total Utility is", flush=True)
-        print(total_utility, flush=True)
         output.append("Total Maximum Satisfaction you can get is "+ str(round(total_utility,1)))
 
         return render_template('welcome.html', form=form, products=products_in_category, utility_per_price=utility_per_price, output=output,login=login)
@@ -357,7 +349,7 @@ def products():
             product_name.append(product.name)
             utility.append(product.utility)
             utility_per_price= product.utility/product.price
-            final_product.append([product.name, utility_per_price,product.price,0, product.marginal_utility])
+            final_product.append([product.name, utility_per_price,product.price,0, product.marginal_utility,product.utility, product.price])
 
         highest_utility_per_price=0;
         best_class=[]
@@ -373,15 +365,16 @@ def products():
             if best_class[1]<=0:
                 break
             budget -= best_class[2]
-            total_utility += best_class[1]
+            total_utility += best_class[5]
             for x in final_product:
                 if best_class == x:
                     if x[4]==3:
-                        x[1]-=0.2
+                        x[5]-=1
                     elif x[4]==2:
-                        x[1] -= 0.5
+                        x[5] -= 3
                     else:
-                        x[1]-=0.8
+                        x[5]-=5
+                    x[1]= x[5]/x[6]
                     x[3] += 1
                     break
 
