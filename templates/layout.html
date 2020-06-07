@@ -10,7 +10,38 @@
     {% block style %}
     <link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='css/main.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='vendor/bootstrap/css/bootstrap.min.css')}}">
+    <style type="text/css">
+
+        body{
+          background-image: url({{ url_for('static', filename='images/first_page.jpg') }});
+          background-size: cover;
+          background-attachment: fixed;
+          position: relative;
+        }
+
+        .items_grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .items_grid img {
+          width: 200px;
+          height: 200px;
+          max-width: 200px;
+          max-height: 200px;
+        }
+
+        .items_grid .description {
+            width: 350px;
+            max-width: 350px;
+            word-wrap: break-word;
+        }
+
+
+
+    </style>
     {% endblock %}
+
 {% endblock %}
 </head>
 <body>
@@ -20,24 +51,6 @@
     <header class="header1">
         <!-- Header desktop -->
         <div class="container-menu-header">
-            <div class="topbar">
-
-                <span class="topbar-child1">
-
-                </span>
-
-                <div class="topbar-child2">
-                    <span class="topbar-email">
-                    </span>
-
-                    <div class="topbar-language rs1-select2">
-                        <select class="selection-1" name="currency">
-                            <option>MYR</option>
-                            <option>USD</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
 
             <div class="wrap_header">
                 <!-- Logo -->
@@ -54,7 +67,7 @@
                             </li>
 
                             <li>
-                                <a href="product.html">Product</a>
+                                <a href="product">All Product</a>
                             </li>
 
 
@@ -90,9 +103,6 @@
     </header>
     {% endblock %}
 
-    {% block upper_content %}
-
-    {% endblock %}
 
 
     {% block content %}

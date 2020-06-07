@@ -12,7 +12,7 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, fresh_login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import datetime
 import stripe
 import email_validator
@@ -58,12 +58,11 @@ Mail.init_app(app)
 LoginManager.init_app(app)
 db.create_all()
 
-
-
-
 LoginManager.session_protection = 'strong'
 LoginManager.login_view = 'login'
 LoginManager.login_message='You need to login!'
+
+budget_entered = False
 
 #oh my, all the class are in camel case XD
 class Product(db.Model):
@@ -156,18 +155,21 @@ def LoadUser(UserId):
     return User.query.get(int(UserId))
 
 @app.route('/', methods=['GET', 'POST'])
-@login_required
 def welcome():
+    global budget_entered
     form = WelcomeForm()
 
     if form.validate_on_submit():
+        budget_entered= True
         budget, category = form.budget, form.category
+        session['budget'] = form.budget
+        session['category'] = form.category
+
         return render_template('welcome.html', form=form, result=Product.query.filter_by(category=category.data.id).all())
 
     return render_template('welcome.html', form=form)
 
 @app.route('/image/<path:filename>')
-@login_required
 def access_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
@@ -187,7 +189,7 @@ def login():
                 login_user(user, remember=form.remember.data)
                 session['username'] = user.username
                 session['email']= user.email
-                return redirect(url_for('home'))
+                return redirect(url_for('welcome'))
 
         return '<h1>Invalid email or password</h1>'
         #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
@@ -229,14 +231,8 @@ If you did not make this request then simply ignore this email and no changes wi
 '''
     Mail.send(msg)
 
-@app.route('/test')
-@login_required
-def test():
-    return render_template('layout.html')
-
 
 @app.route("/password", methods=['GET', 'POST'])
-@login_required
 def password():
     form = RequestResetForm()
     if form.validate_on_submit():
@@ -268,7 +264,22 @@ def reset_token(token):
 
 @app.route('/home')
 def home():
-    return render_template('index.html')
+    global budget_entered
+    if budget_entered:
+
+        return render_template('index.html')
+
+    return redirect(url_for('welcome'))
+
+@app.route('/product')
+def product():
+    global budget_entered
+    if budget_entered:
+        products = Product.query.all()
+        return render_template('products.html', products = products)
+
+    return redirect(url_for('welcome'))
+
 
 @app.route('/about_us')
 def about_us():
@@ -313,7 +324,7 @@ def add_item():
 
         db.session.add(new_product)
         db.session.commit()
-        return "Success!"
+        return render_template('add_item.html', form=form)
         #return redirect(url_for('home'))
         #return ("Success!"+ {file_url})
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'

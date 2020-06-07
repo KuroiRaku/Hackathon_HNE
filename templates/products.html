@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+
+<div class="items_grid container">
+    {% for product in products %}
+    <table>
+    <tbody>
+        <tr>
+            <td >
+              <img src ="image/{{ product['image_url'] }}">
+            </td>
+            <td class="details">
+                <table>
+                <tbody>
+                    <tr>
+                      <td>Product name: {{ product['name'] }}</td>
+                      <td>Price: {{ product['price'] }}</td>
+                    </tr>
+                    <tr>
+                      <td>Utility: {{ product['utility'] }}</td>
+                      <td>Marginal utility: {{ product['marginal_utility'] }}</td>
+                    </tr>
+                    <tr>
+                      <td class="description">Description:<br/>{{ product['description'] }}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+    {% endfor %}
+
+{% endblock %}
