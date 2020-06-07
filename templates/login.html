@@ -1,12 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-<form method=post>
-  <dl>
-        {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.email) }}
-        {{ wtf.form_field(form.password) }}
-        {{ wtf.form_field(form.remember) }}
-  </dl>
-  <p><input type=submit value=Login> <a href="signup">Sign in</a></p>
-</form>
+<div class="container">
+  <form class= "form-signin" method="POST">
+    <dl>
+          {{ form.hidden_tag() }}
+          {{ wtf.form_field(form.email) }}
+          {{ wtf.form_field(form.password) }}
+          {{ wtf.form_field(form.remember) }}
+      </dl>
+    <p><input type=submit> Sign in</p>
+    <p> New User? Click <a href="signup"> here </a> to sign up! </p>
+  </form>
+</div>
 {% endblock %}

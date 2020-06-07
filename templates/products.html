@@ -2,7 +2,20 @@
 
 {% block content %}
 
-
-{% include "_item_grid.html" %}
+{% if products != Null %}
+    <div class="container">
+    {% if products|length == 0 %}
+        No items in category "{{ form.category.data.name }}".
+    {% else %}
+        <pre>
+        {% for i in output %}
+            {{i}}
+        {% endfor %}
+        </pre>
+        <br>
+        {% include "_item_grid.html" %}
+    {% endif %}
+    </div>
+{% endif %}
 
 {% endblock %}

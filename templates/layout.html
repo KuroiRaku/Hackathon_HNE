@@ -73,20 +73,22 @@
                             <li>
                                 <a href="about_us">About</a>
                             </li>
-
-                            <li>
-                                <a href="contact_us">Contact</a>
-                            </li>
                         </ul>
                     </nav>
                 </div>
 
                 <!-- Header Icon -->
                 <div class="header-icons">
-                    <a href="#" class="header-wrapicon1 dis-block">
+                  {% if login %}
+                    <a href="logout" class="header-wrapicon1 dis-block">
                         <img src="{{url_for('.static', filename='images/icons/icon-header-01.png')}}" class="header-icon1" alt="ICON">
                     </a>
 
+                  {% else %}
+                    <a href="login" class="header-wrapicon1 dis-block">
+                        <img src="{{url_for('.static', filename='images/icons/icon-header-01.png')}}" class="header-icon1" alt="ICON">
+                    </a>
+                  {% endif %}
                     <span class="linedivide1"></span>
 
                     <div class="header-wrapicon2">
