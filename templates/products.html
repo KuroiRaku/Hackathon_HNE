@@ -2,6 +2,9 @@
 
 {% block content %}
 
+{% for i in output %}
+<p>{{i}}</p>
+{% endfor %}
 {% include "_item_grid.html" %}
 
 {% endblock %}
