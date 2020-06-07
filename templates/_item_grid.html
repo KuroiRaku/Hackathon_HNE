@@ -37,7 +37,8 @@
                         {% if editing %}
                             {{ wtf.form_field(form.marginal_utility) }}
                         {% else %}
-                            How likely the satisfaction stay the same after each purchase (scale of 3): {{ product['marginal_utility'] }}
+                            How likely the satisfaction stay the same after each purchase:
+                            {{ ['High', 'Medium', 'Low'][product['marginal_utility'] - 1] }}
                         {% endif %}
                         </td>
                     </tr>
@@ -66,6 +67,10 @@
             </a>
         {% endfor %}
     {% else %}
-        {{ item_cell(products, form) }}
+        <form method="post">
+            {{ form.hidden_tag() }}
+            {{ item_cell(products, form) }}
+              <p><input type=submit value=Save></p>
+        </form>
     {% endif %}
 </div>

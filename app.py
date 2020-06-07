@@ -86,7 +86,7 @@ class ProductEditForm(FlaskForm):
     name= TextField("Product name", validators=[InputRequired()])
     utility = IntegerField("utility", validators=[DataRequired()])
     marginal_utility= SelectField("Satisfaction if you get the same product", validators=[DataRequired()], choices=[('3', 'High'), ('2','Average'),
-     ('1', 'low')])
+     ('1', 'Low')])
     description = StringField('Description', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
 
@@ -395,16 +395,17 @@ def products():
 def product(id):
     global budget_entered
     product = Product.query.filter_by(id=id).first()
-
+    marginal_utility_position = 4 - product.marginal_utility   #1st position: 3, 2nd position: 2, 3rd position: 1
+    form = ProductEditForm(name=product.name, utility=product.utility, description=product.description, marginal_utility=marginal_utility_position, price=product.price)
+    
     if budget_entered:
-        form = ProductForm()
-        form.name.data = product.name
-        form.utility.data = product.utility
-        form.marginal_utility.data = product.marginal_utility
-        form.description.data = product.description
-        form.price.data = product.price
         if form.validate_on_submit():
-            pass
+            product.name = form.name.data
+            product.utility = form.utility.data
+            product.description = form.description.data
+            product.marginal_utility = form.marginal_utility.data
+            product.price = form.price.data
+            db.session.commit()
 
         product.image_url = os.path.join("../../image", product.image_url)
         return render_template('products.html', products=product, form=form)
