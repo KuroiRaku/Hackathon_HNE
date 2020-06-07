@@ -1,5 +1,7 @@
 <div class="items_grid container">
-  
+  {% for i in output %}
+    <p>{{i}}</p>
+  {% endfor %}
     {% for product in products %}
         <table>
         <tbody>
@@ -15,8 +17,8 @@
                             <td>Price: {{ product['price'] }}</td>
                         </tr>
                         <tr>
-                            <td>Utility: {{ product['utility'] }}</td>
-                            <td>Marginal utility: {{ product['marginal_utility'] }}</td>
+                            <td>Satisfaction Utility: {{ product['utility'] }}</td>
+                            <td>How likely the satisfaction stay the same after each purchase (scale of 3): {{ product['marginal_utility'] }}</td>
                         </tr>
                         <tr>
                             <td class="description">Description:<br/>{{ product['description'] }}</td>
