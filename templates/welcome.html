@@ -1,14 +1,10 @@
 {% extends "layout.html" %}
+
 {% block title %}
     <title>Welcome</title>
 {% endblock %}
 
-
-
 {% block content %}
-
-
-
 
 <div class="container">
   <form method=post>
@@ -21,51 +17,20 @@
   </form>
 </div>
 
-<div class="container">
-{% if result != Null %}
-    {% if result|length == 0 %}
+{% if products != Null %}
+    <div class="container">
+    {% if products|length == 0 %}
         No items in category "{{ form.category.data.name }}".
     {% else %}
-
-      <pre>
-      {% for i in output %}
-       {{i}}
-      {% endfor %}
-      </pre>
-      <br>
-        {% for x in result %}
-        <table>
-        <tbody>
-            <tr>
-                <td >
-                  <img src ="image/{{ x['image_url'] }}">
-                </td>
-                <td class="details">
-                    <table>
-                    <tbody>
-                        <tr>
-                          <td>Product name: {{ x['name'] }}</td>
-                          <td>Price: {{ x['price'] }}</td>
-                        </tr>
-                        <tr>
-                          <td>Utility: {{ x['utility'] }}</td>
-                          <td>Marginal utility: {{ x['marginal_utility'] }}</td>
-                        </tr>
-                        <tr>
-                          <td class="description">Description:<br/>{{ x['description'] }}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-        </table>
+        <pre>
+        {% for i in output %}
+            {{i}}
         {% endfor %}
-
+        </pre>
+        <br>
+        {% include "_item_grid.html" %}
     {% endif %}
-
+    </div>
 {% endif %}
-</div>
-
 
 {% endblock %}

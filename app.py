@@ -166,6 +166,9 @@ def welcome():
         session['budget'] = form.budget
         session['category'] = form.category
         products_in_category = Product.query.filter_by(category=category.data.id).all()
+        
+        if len(products_in_category) == 0:
+            return render_template('welcome.html', form=form, products=products_in_category)
 
         product_name=[]
         utility=[]
@@ -220,7 +223,7 @@ def welcome():
 
         print(output,flush=True)
 
-        return render_template('welcome.html', form=form, result=Product.query.filter_by(category=category.data.id).all(), utility_per_price=utility_per_price, output=output)
+        return render_template('welcome.html', form=form, products=products_in_category, utility_per_price=utility_per_price, output=output)
 
     return render_template('welcome.html', form=form)
 
