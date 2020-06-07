@@ -6,15 +6,17 @@
 
 {% block content %}
   <style>
+
   body {
-    background-image: url('about.png');
+    background-image: url({{ url_for('static', filename='images/about.png') }});
     height: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-
   }
+
   </style>
+
   <head>
 
     <title> About </title>
