@@ -63,6 +63,7 @@ LoginManager.login_view = 'login'
 LoginManager.login_message='You need to login!'
 
 budget_entered = False
+entered_budget=0
 
 #oh my, all the class are in camel case XD
 class Product(db.Model):
@@ -159,16 +160,17 @@ def LoadUser(UserId):
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
     global budget_entered
+    global entered_budget
     form = WelcomeForm()
 
     if form.validate_on_submit():
         budget_entered= True
         budget = float(form.budget.data)
         category = form.category
-        session['budget'] = form.budget
+        entered_budget = float(form.budget.data)
         session['category'] = form.category
         products_in_category = Product.query.filter_by(category=category.data.id).all()
-        
+
         if len(products_in_category) == 0:
             return render_template('welcome.html', form=form, products=products_in_category)
 
@@ -185,7 +187,7 @@ def welcome():
             product_name.append(product.name)
             utility.append(product.utility)
             utility_per_price= product.utility/product.price
-            final_product.append([product.name, utility_per_price,product.price,0])
+            final_product.append([product.name, utility_per_price,product.price,0, product.marginal_utility])
 
         highest_utility_per_price=0;
         best_class=[]
@@ -199,13 +201,18 @@ def welcome():
                     highest_utility_per_price= x[1]
                     best_class=x
             #when finish looping
-            if best_class[1]==0:
+            if best_class[1]<=0:
                 break
             budget -= best_class[2]
             total_utility += best_class[1]
             for x in final_product:
                 if best_class == x:
-                    x[1] -= 0.5
+                    if x[4]==3:
+                        x[1]-=0.2
+                    elif x[4]==2:
+                        x[1] -= 0.5
+                    else:
+                        x[1]-=0.8
                     x[3] += 1
                     break
 
@@ -221,9 +228,7 @@ def welcome():
             output.append(str(x[3])+ " "+ str(x[0])+"(s)")
         print("Total Utility is", flush=True)
         print(total_utility, flush=True)
-        output.append("Total Utility is "+ str(total_utility))
-
-        print(output,flush=True)
+        output.append("Total Maximum Satisfaction you can get is "+ str(round(total_utility,1)))
 
         return render_template('welcome.html', form=form, products=products_in_category, utility_per_price=utility_per_price, output=output)
 
@@ -324,20 +329,66 @@ def reset_token(token):
 
 @app.route('/home')
 def home():
-    global budget_entered
-    if budget_entered:
-
-        return render_template('index.html')
-
     return redirect(url_for('welcome'))
 
 @app.route('/product')
 def products():
     global budget_entered
+
     if budget_entered:
         products = Product.query.all()
-        for p in products: print(p.id)
-        return render_template('products.html', products = products)
+
+        budget = entered_budget
+        print(entered_budget,flush=True)
+        product_name=[]
+        utility=[]
+        price=[]
+        utility_per_price=[]
+        final_product=[]
+        total_utility=0;
+        total_cost=0;
+
+        for product in products:
+            product_name.append(product.name)
+            utility.append(product.utility)
+            utility_per_price= product.utility/product.price
+            final_product.append([product.name, utility_per_price,product.price,0, product.marginal_utility])
+
+        highest_utility_per_price=0;
+        best_class=[]
+        total_utility=0
+        output=[]
+        output.append("You should buy")
+        while budget > 0.0:
+            for x in final_product:
+                if x[1] > highest_utility_per_price:
+                    highest_utility_per_price= x[1]
+                    best_class=x
+            #when finish looping
+            if best_class[1]<=0:
+                break
+            budget -= best_class[2]
+            total_utility += best_class[1]
+            for x in final_product:
+                if best_class == x:
+                    if x[4]==3:
+                        x[1]-=0.2
+                    elif x[4]==2:
+                        x[1] -= 0.5
+                    else:
+                        x[1]-=0.8
+                    x[3] += 1
+                    break
+
+            highest_utility_per_price = 0
+
+        for x in final_product:
+            output.append(str(x[3])+ " "+ str(x[0])+"(s)")
+
+        output.append("Total Maximum Satisfaction you can get is"+ str(round(total_utility,1)))
+
+        return render_template('products.html', products = products,output=output)
+
 
     return redirect(url_for('welcome'))
 
@@ -408,7 +459,7 @@ def add_item():
         #return redirect(url_for('home'))
         #return ("Success!"+ {file_url})
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
-    
+
     return render_template('add_item.html', form=form)
 
 if __name__=="__main__":
