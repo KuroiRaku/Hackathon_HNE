@@ -53,7 +53,7 @@
 
             <div class="wrap_header">
                 <!-- Logo -->
-                <a href="home" class="logo">
+                <a href="{{ url_for('welcome') }}" class="logo">
                     <img src="{{url_for('.static', filename='images/icons/logo.png')}}" alt="IMG-LOGO">
                 </a>
 
@@ -62,7 +62,7 @@
                     <nav class="menu">
                         <ul class="main_menu">
                             <li>
-                                <a href="home">Home</a>
+                                <a href="{{ url_for('welcome') }}">Home</a>
                             </li>
 
                             <li>
