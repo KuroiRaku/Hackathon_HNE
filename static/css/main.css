@@ -1,42 +1,3 @@
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url('../fonts/montserrat/Montserrat-Regular.ttf');
-}
-
-@font-face {
-  font-family: Montserrat-Medium;
-  src: url('../fonts/montserrat/Montserrat-Medium.ttf');
-}
-
-@font-face {
-  font-family: Montserrat-Bold;
-  src: url('../fonts/montserrat/Montserrat-Bold.ttf');
-}
-
-@font-face {
-  font-family: Montserrat-Italic;
-  src: url('../fonts/montserrat/Montserrat-Italic.ttf');
-}
-
-@font-face {
-  font-family: Montserrat-Black;
-  src: url('../fonts/montserrat/Montserrat-Black.ttf');
-}
-
-@font-face {
-  font-family: Linearicons;
-  src: url('../fonts/Linearicons-Free-v1.0.0/WebFont/Linearicons-Free.ttf');
-}
-
-@font-face {
-  font-family: Poppins-Bold;
-  src: url('../fonts/poppins/Poppins-Bold.ttf');
-}
-
-@font-face {
-  font-family: Poppins-Black;
-  src: url('../fonts/poppins/Poppins-Black.ttf');
-}
 
 /*[ RESTYLE TAG ]
 ///////////////////////////////////////////////////////////
@@ -49,13 +10,12 @@
 
 body, html {
 	height: 100%;
-	font-family: Montserrat-Regular, sans-serif;
+	font-family: sans-serif;
   font-weight: 400;
 }
 
 /* ------------------------------------ */
 a {
-	font-family: Montserrat-Regular;
   font-weight: 400;
 	font-size: 15px;
 	line-height: 1.7;
@@ -82,7 +42,6 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 p {
-	font-family: Montserrat-Regular;
 	font-size: 15px;
 	line-height: 1.7;
 	color: #888888;
@@ -133,18 +92,17 @@ button:hover {
 iframe {
 	border: none !important;
 }
-.image{
 
-}
 /* ------------------------------------ */
 .container {
-
-	max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+  width: 80%;
 }
 
-.slick-slide {
-  outline: none !important;
-}
+
 
 
 
@@ -153,16 +111,7 @@ iframe {
 /*[ LOADDING ]
 ///////////////////////////////////////////////////////////
 */
-.animsition-loading-1 {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
+
 
 [data-loader='ball-scale'] {
     width: 50px;
@@ -438,53 +387,7 @@ li.sale-noti > a {
   opacity: 1;
 }
 
-.sub_menu {
-  list-style-type: none;
-  position: absolute;
-  z-index: 1100;
-  top:0;
-  left:100%;
-  width: 225px;
-  background-color: #222222;
-  opacity: 0;
-  visibility: hidden;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  transition: all 0.4s;
-  -webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-}
 
-.main_menu > li > .sub_menu {
-  top:100%;
-  left: 0;
-  position: absolute;
-}
-
-.sub_menu li:hover > .sub_menu {
-  visibility: visible;
-  opacity: 1;
-}
-
-.sub_menu li {
-  transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-}
-
-.sub_menu li, .sub_menu a {
-  padding: 10px;
-  font-family: Montserrat-Regular;
-  font-size: 13px;
-  color: white;
-}
-
-.sub_menu > li:hover > a {
-  color: #e65540;
-  text-decoration: none;
-}
 
 /* ------------------------------------ */
 .header-icons {
@@ -744,14 +647,7 @@ li.sale-noti > a {
   align-items: center;
 }
 
-.hamburger {
-  -webkit-transform: scale(0.8);
-  -moz-transform: scale(0.8);
-  -ms-transform: scale(0.8);
-  -o-transform: scale(0.8);
-  transform: scale(0.8);
-  margin-top: 5px;
-}
+
 
 
 /*[ Header icon mobile ]
@@ -973,100 +869,7 @@ li.sale-noti > a {
 
 /*[ Menu ]
 ===========================================================*/
-.container-menu-header-v3 .wrap_header {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  background-color: white;
-}
 
-
-/*[ Logo ]
------------------------------------------------------------*/
-.container-menu-header-v3 .logo3 {
-  display: block;
-}
-
-.container-menu-header-v3 .logo3 img {
-  max-width: 120px;
-}
-
-/*[ Header Icon ]
------------------------------------------------------------*/
-.container-menu-header-v3 .header-icons3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  align-items: center;
-  position: unset;
-}
-
-/*[ Header cart ]
------------------------------------------------------------
-*/
-.container-menu-header-v3 .header-cart {
-  left: -10px;
-  transform-origin: top left;
-}
-
-/*[ Menu ]
------------------------------------------------------------*/
-.container-menu-header-v3 .main_menu {
-  list-style-type: none;
-  margin: 0px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.container-menu-header-v3 .main_menu > li {
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-left: 0px;
-  padding-right: 0px;
-  text-align: center;
-}
-
-.container-menu-header-v3 .sub_menu {
-  top:0;
-  left:100%;
-}
-
-.container-menu-header-v3 .main_menu > li > .sub_menu {
-  top: 10px;
-  left: 95%;
-}
-
-.container-menu-header-v3 .sub_menu li {
-  text-align: left;
-}
-
-.container-menu-header-v3 .topbar-social-item {
-  padding: 10px 8px;
-}
-
-
-/*[ Page sidebar ]
------------------------------------------------------------
-*/
-.container1-page {
-  margin-left: 320px;
-}
 
 @media (max-width: 992px){
   .wrap_header_mobile {
@@ -1310,11 +1113,6 @@ li.sale-noti > a {
 /*[ Modal video 01 ]
 ///////////////////////////////////////////////////////////
 */
-body {
-  padding-right: 0px;
-  display: inline-block;
-  
-}
 
 
 
@@ -1328,14 +1126,3 @@ body {
 /*[ Input NumProduct ]
 ///////////////////////////////////////////////////////////
 */
-input.num-product {
-    -moz-appearance: textfield;
-    appearance: none;
-    -webkit-appearance: none;
-}
-
-input.num-product::-webkit-outer-spin-button,
-input.num-product::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}

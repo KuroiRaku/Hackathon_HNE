@@ -11,17 +11,19 @@
 
 
 <div class="container">
-  <form method=post>
+  <h1> Welcome New Users! </h1>
+  <p> Please start entering your budget below to start!
+  <form class="form-signin" method=post>
       <dl>
           {{ form.hidden_tag() }}
           {{ wtf.form_field(form.budget) }}
           {{ wtf.form_field(form.category) }}
       </dl>
-      <p><input type="submit" value="Go" /></p>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Start!</button>
   </form>
-</div>
 
-<div class="container">
+
+
 {% if result != Null %}
     {% if result|length == 0 %}
         No items in category "{{ form.category.data.name }}".
